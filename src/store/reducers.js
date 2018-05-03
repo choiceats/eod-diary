@@ -1,11 +1,10 @@
 import { combineReducers } from 'redux'
+import { LOAD_DIARIES, LOAD_ENTRIES, UPDATE_NEW_DIARY_FIELDS } from './actions'
 
-const LOAD_DIARIES = 'LOAD_DIARIES'
-const LOAD_ENTRIES = 'LOAD_ENTRIES'
-
-function diaries(state = [], action) {
+export function diaries(state = [], action) {
   switch (action.type) {
     case LOAD_DIARIES:
+      //TODO: This should be action.payload.diaries???
       return action.diaries
 
     case LOAD_ENTRIES:
@@ -28,4 +27,20 @@ function diaries(state = [], action) {
   }
 }
 
-export default combineReducers({ diaries })
+export function newDiary(state = { name: '', description: '' }, action) {
+  switch (action.type) {
+    case UPDATE_NEW_DIARY_FIELDS:
+      return {
+        ...state,
+        ...action.payload
+      }
+
+    default:
+      return state
+  }
+}
+
+export default combineReducers({
+  diaries,
+  newDiary
+})

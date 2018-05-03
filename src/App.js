@@ -1,29 +1,38 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import { login } from './services/firebase'
 import { createAppStore } from './store'
 import Navbar from './components/Navbar'
 import DiaryList from './routes/DiaryList'
 import Diary from './routes/Diary'
+import NewDiaryForm from './routes/NewDiaryForm'
+import { setItem, fetchDiaries } from './services/localStorage'
 
-import logo from './logo.svg'
 import './App.css'
 
-function fetchDiaries() {
-  return [
-    {
-      description: 'work',
-      dateCreated: '2018-05-01',
-      id: '1'
-    },
-    {
-      description: 'personal',
-      dateCreated: '2018-05-02',
-      id: '2'
-    }
-  ]
+function seedDiaries() {
+  const diaries = JSON.parse(fetchDiaries())
+
+  if (diaries === null) {
+    const seed = [
+      {
+        description: 'work',
+        dateCreated: '2018-05-01',
+        id: '1',
+        entries: []
+      },
+      {
+        description: 'personal',
+        dateCreated: '2018-05-02',
+        id: '2',
+        entries: []
+      }
+    ]
+
+    setItem('diaries', JSON.stringify(seed))
+  }
 }
 
 class App extends Component {
@@ -34,8 +43,8 @@ class App extends Component {
   }
 
   componentDidMount() {
+    seedDiaries()
     login(user => this.setState({ user }))
-    this.store.dispatch({ type: 'LOAD_DIARIES', diaries: fetchDiaries() })
   }
 
   render() {
@@ -52,6 +61,7 @@ class App extends Component {
             <React.Fragment>
               <Navbar />
               <Route exact path="/" component={DiaryList} />
+              <Route exact path="/diary/new" component={NewDiaryForm} />
               <Route exact path="/diary/:diaryId" component={Diary} />
             </React.Fragment>
           </Router>

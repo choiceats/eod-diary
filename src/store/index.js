@@ -1,9 +1,16 @@
-import { createStore /*, applyMiddleware*/ } from 'redux'
-// import createSagaMiddleware from 'redux-saga'
-// TODO: Hook up Redux saga middleware
+import { createStore, applyMiddleware } from 'redux'
+import createSagaMiddleware from 'redux-saga'
+
+import { rootSaga } from './sagas'
 
 import rootReducer from './reducers'
 
+const sagaMiddleware = createSagaMiddleware()
+
 export function createAppStore() {
-  return createStore(rootReducer)
+  const store = createStore(rootReducer, applyMiddleware(sagaMiddleware))
+
+  sagaMiddleware.run(rootSaga)
+
+  return store
 }

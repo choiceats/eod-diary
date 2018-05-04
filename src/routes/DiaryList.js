@@ -23,8 +23,8 @@ const SimpleList = ({ classes, diaries }) => (
   <div className={classes.root}>
     <List component="nav">
       {diaries.map((d, i) => (
-        <Link to={`/diary/${d.id}`}>
-          <ListItem key={i} button>
+        <Link key={i} to={`/diary/${d.id}`}>
+          <ListItem button>
             <ListItemText>{d.description}</ListItemText>
           </ListItem>
         </Link>

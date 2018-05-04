@@ -8,16 +8,9 @@ import Button from 'material-ui/Button'
 import AddIcon from '@material-ui/icons/Add'
 import TextField from 'material-ui/TextField'
 
-import { addDiary } from '../services/diaryApi'
-import { updateDiaryFields /*, saveNewDiary*/ } from '../store/actions'
+import { updateDiaryFields, saveNewDiaryRequest } from '../store/actions'
 
-// TODO: Integrate with React Redux Saga rather directly saving to local storage.
-// Replace with dirtySaveDiary usage with saveNewDiary, which in turn will fire off a saga.
-function dirtySaveDiary({ name, description }) {
-  addDiary({ name, description })
-}
-
-class NewDiaryForm extends Component {
+export class NewDiaryForm extends Component {
   componentDidMount() {}
 
   render() {
@@ -29,7 +22,7 @@ class NewDiaryForm extends Component {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                id="required"
+                id="new-diary-name"
                 label="Name"
                 margin="normal"
                 onChange={e =>
@@ -42,7 +35,7 @@ class NewDiaryForm extends Component {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                id="description"
+                id="new-diary-description"
                 label="Description"
                 margin="normal"
                 multiline
@@ -62,9 +55,9 @@ class NewDiaryForm extends Component {
           color="primary"
           aria-label="add"
           style={{ position: 'fixed', right: 15, bottom: 15 }}
+          onClick={() => dispatch(saveNewDiaryRequest({ name, description }))}
           to="/"
           component={Link}
-          onClick={() => dirtySaveDiary({ name, description })}
           disabled={!name.length || !description.length}
         >
           <AddIcon />
@@ -73,6 +66,7 @@ class NewDiaryForm extends Component {
     )
   }
 }
+//TODO: This component is "cheating" and handling the routing itself when the saga that intercepts the action should probably take control of routing
 
 NewDiaryForm.propTypes = {
   name: string.isRequired,

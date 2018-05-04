@@ -7,7 +7,7 @@ import AddIcon from '@material-ui/icons/Add'
 import List, { ListItem, ListItemText } from 'material-ui/List'
 import Grid from 'material-ui/Grid'
 
-import { fetchDiaries } from '../services/localStorage'
+import { loadDiaries } from '../store/actions'
 
 import './DiaryList.css'
 
@@ -36,10 +36,7 @@ const StyledList = withStyles(listStyles)(SimpleList)
 
 class DiaryList extends React.Component {
   componentDidMount() {
-    this.props.dispatch({
-      type: 'LOAD_DIARIES',
-      diaries: JSON.parse(fetchDiaries())
-    })
+    this.props.dispatch(loadDiaries())
   }
 
   render() {

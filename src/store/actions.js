@@ -1,3 +1,5 @@
+import { fetchDiaries } from '../services/diaryApi'
+
 export const LOAD_DIARIES = 'LOAD_DIARIES'
 export const LOAD_ENTRIES = 'LOAD_ENTRIES'
 export const UPDATE_NEW_DIARY_FIELDS = 'UPDATE_NEW_DIARY_FIELDS'
@@ -13,5 +15,12 @@ export const saveNewDiary = ({ name, description }) => ({
   payload: {
     name,
     description
+  }
+})
+
+export const loadDiaries = () => ({
+  type: 'LOAD_DIARIES',
+  payload: {
+    diaries: fetchDiaries()
   }
 })

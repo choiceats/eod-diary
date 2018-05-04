@@ -4,8 +4,7 @@ import { LOAD_DIARIES, LOAD_ENTRIES, UPDATE_NEW_DIARY_FIELDS } from './actions'
 export function diaries(state = [], action) {
   switch (action.type) {
     case LOAD_DIARIES:
-      //TODO: This should be action.payload.diaries???
-      return action.diaries
+      return action.payload.diaries
 
     case LOAD_ENTRIES:
       const idToUpdate = state.findIndex(

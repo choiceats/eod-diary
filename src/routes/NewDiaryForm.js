@@ -8,8 +8,8 @@ import Button from 'material-ui/Button'
 import AddIcon from '@material-ui/icons/Add'
 import TextField from 'material-ui/TextField'
 
-import { addDiary } from '../services/localStorage'
-import { updateDiaryFields, saveNewDiary } from '../store/actions'
+import { addDiary } from '../services/diaryApi'
+import { updateDiaryFields /*, saveNewDiary*/ } from '../store/actions'
 
 // TODO: Integrate with React Redux Saga rather directly saving to local storage.
 // Replace with dirtySaveDiary usage with saveNewDiary, which in turn will fire off a saga.
@@ -79,7 +79,7 @@ NewDiaryForm.propTypes = {
   description: string.isRequired
 }
 
-const mapStateToProps = (state, props) => {
+const mapStateToProps = state => {
   const { name, description } = state.newDiary
 
   return {

@@ -8,14 +8,14 @@ import Navbar from './components/Navbar'
 import DiaryList from './routes/DiaryList'
 import Diary from './routes/Diary'
 import NewDiaryForm from './routes/NewDiaryForm'
-import { setItem, fetchDiaries } from './services/localStorage'
+import { setItem, fetchDiaries } from './services/diaryApi'
 
 import './App.css'
 
 function seedDiaries() {
-  const diaries = JSON.parse(fetchDiaries())
+  const diaries = fetchDiaries()
 
-  if (diaries === null) {
+  if (diaries.length === 0) {
     const seed = [
       {
         description: 'work',

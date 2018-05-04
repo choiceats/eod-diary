@@ -1,11 +1,38 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { withStyles } from 'material-ui/styles'
 import Button from 'material-ui/Button'
 import AddIcon from '@material-ui/icons/Add'
+import List, { ListItem, ListItemText } from 'material-ui/List'
 import Grid from 'material-ui/Grid'
 
 import { fetchDiaries } from '../services/localStorage'
+
+import './DiaryList.css'
+
+const listStyles = theme => ({
+  root: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper
+  }
+})
+
+const SimpleList = ({ classes, diaries }) => (
+  <div className={classes.root}>
+    <List component="nav">
+      {diaries.map((d, i) => (
+        <Link to={`/diary/${d.id}`}>
+          <ListItem key={i} button>
+            <ListItemText>{d.description}</ListItemText>
+          </ListItem>
+        </Link>
+      ))}
+    </List>
+  </div>
+)
+const StyledList = withStyles(listStyles)(SimpleList)
 
 class DiaryList extends React.Component {
   componentDidMount() {
@@ -19,14 +46,8 @@ class DiaryList extends React.Component {
     const { diaries } = this.props
 
     return (
-      <Grid container>
-        <ul>
-          {diaries.map((d, i) => (
-            <li key={i}>
-              <Link to={`/diary/${d.id}`}>{d.description}</Link>
-            </li>
-          ))}
-        </ul>
+      <Grid container className="diaryList">
+        <StyledList diaries={diaries} />
         <Button
           variant="fab"
           color="primary"

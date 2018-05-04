@@ -4,7 +4,6 @@ import Typography from 'material-ui/Typography'
 import IconButton from 'material-ui/IconButton'
 
 import { Navbar } from '../Navbar'
-import { jssPreset } from 'material-ui'
 
 describe('Components: Navbar', () => {
   let props

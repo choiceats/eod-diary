@@ -8,8 +8,6 @@ import {
 import { addDiary } from '../services/diaryApi'
 
 function* saveDiarySaga(action) {
-  console.log(action)
-
   const res = addDiary(action.payload)
 
   if (typeof res.id === 'string' && res.id.length > 0) {

@@ -66,6 +66,7 @@ export class NewDiaryForm extends Component {
     )
   }
 }
+
 //TODO: This component is "cheating" and handling the routing itself when the saga that intercepts the action should probably take control of routing
 
 NewDiaryForm.propTypes = {

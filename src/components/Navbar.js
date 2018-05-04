@@ -5,6 +5,8 @@ import { withRouter } from 'react-router'
 import AppBar from 'material-ui/AppBar'
 import Toolbar from 'material-ui/Toolbar'
 import Typography from 'material-ui/Typography'
+import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
+import IconButton from 'material-ui/IconButton'
 import { withStyles } from 'material-ui/styles'
 
 const styles = {
@@ -22,7 +24,7 @@ export function Navbar(props) {
       return 'My Diaries'
     }
 
-    const matches = pathname.match(/diary\/(\d+)/)
+    const matches = pathname.match(/diary\/([^/]+)/)
     if (matches) {
       const diaryId = matches[1]
       const diary = diaries.find(d => d.id === diaryId)
@@ -35,13 +37,19 @@ export function Navbar(props) {
   }
 
   const title = locationToTitle(location)
+  const backButton =
+    props.history.length > 1 && location.pathname !== '/' ? (
+      <IconButton onClick={() => props.history.goBack()} color="primary">
+        <KeyboardArrowLeftIcon />
+      </IconButton>
+    ) : null
 
   return (
     <div className={classes.root}>
       <AppBar position="static" color="default">
         <Toolbar>
           <Typography variant="title" color="inherit">
-            {title}
+            {backButton} {title}
           </Typography>
         </Toolbar>
       </AppBar>

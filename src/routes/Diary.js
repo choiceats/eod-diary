@@ -11,7 +11,7 @@ function fetchEntries() {
   ]
 }
 
-class Diary extends Component {
+export class Diary extends Component {
   componentDidMount() {
     this.props.dispatch({
       type: 'LOAD_ENTRIES',

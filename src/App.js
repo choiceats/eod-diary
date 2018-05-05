@@ -13,7 +13,7 @@ import { setItem, fetchDiaries } from './services/diaryApi'
 
 import './App.css'
 
-function seedDiaries() {
+export function seedDiaries() {
   const diaries = fetchDiaries()
 
   if (diaries.length === 0) {

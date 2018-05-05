@@ -1,7 +1,7 @@
 import { diaries, newDiary } from '../reducers'
 import {
-  LOAD_DIARIES,
-  LOAD_ENTRIES,
+  LOAD_DIARIES_SUCCESS,
+  LOAD_ENTRIES_SUCCESS,
   UPDATE_NEW_DIARY_FIELDS,
   SAVE_NEW_DIARY_SUCCESS
 } from '../actions'
@@ -22,7 +22,7 @@ describe(`${diaries.name} reducer`, () => {
     expect(diaries(mockState, mockAction)).toEqual(mockState)
   })
 
-  test(`${LOAD_DIARIES} replaces state with its payload.diaries`, () => {
+  test(`${LOAD_DIARIES_SUCCESS} replaces state with its payload.diaries`, () => {
     const mockState = [
       { id: '1', name: '', description: '', entries: [] },
       { id: '2', name: '', description: '', entries: [] },
@@ -30,7 +30,7 @@ describe(`${diaries.name} reducer`, () => {
     ]
 
     const mockAction = {
-      type: LOAD_DIARIES,
+      type: LOAD_DIARIES_SUCCESS,
       payload: {
         diaries: [{ id: '4', name: '', description: '', entries: [] }]
       }
@@ -39,7 +39,7 @@ describe(`${diaries.name} reducer`, () => {
     expect(diaries(mockState, mockAction)).toEqual(mockAction.payload.diaries)
   })
 
-  test(`${LOAD_ENTRIES} preserves unmatched diaries`, () => {
+  test(`${LOAD_ENTRIES_SUCCESS} preserves unmatched diaries`, () => {
     const mockState = [
       {
         id: '1',
@@ -64,7 +64,7 @@ describe(`${diaries.name} reducer`, () => {
     const lastEntry = { ...mockState[mockState.length - 1] }
 
     const mockAction = {
-      type: LOAD_ENTRIES,
+      type: LOAD_ENTRIES_SUCCESS,
       payload: {
         diaryId: '2',
         entries: ['λaskell', 'rulz']
@@ -77,7 +77,7 @@ describe(`${diaries.name} reducer`, () => {
     expect(newState[newState.length - 1]).toEqual(lastEntry)
   })
 
-  test(`${LOAD_ENTRIES} replaces entries`, () => {
+  test(`${LOAD_ENTRIES_SUCCESS} replaces entries`, () => {
     const mockState = [
       {
         id: '1',
@@ -102,7 +102,7 @@ describe(`${diaries.name} reducer`, () => {
     const lastEntry = { ...mockState[mockState.length - 1] }
 
     const mockAction = {
-      type: LOAD_ENTRIES,
+      type: LOAD_ENTRIES_SUCCESS,
       payload: {
         diaryId: '2',
         entries: ['λaskell', 'rulz']

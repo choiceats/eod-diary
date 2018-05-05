@@ -1,46 +1,42 @@
 import React, { Component } from 'react'
 import { arrayOf, string } from 'prop-types'
 import { connect } from 'react-redux'
-
-function fetchEntries() {
-  return [
-    '0The quick brown fox jumped over the lazy dogs.',
-    '1he quick brown fox jumped over the lazy dogs.',
-    '2he quick brown fox jumped over the lazy dogs.',
-    '3he quick brown fox jumped over the lazy dogs.'
-  ]
-}
+import { loadEntriesRequest, loadDiariesRequest } from '../store/actions'
 
 export class Diary extends Component {
   componentDidMount() {
-    this.props.dispatch({
-      type: 'LOAD_ENTRIES',
-      payload: {
-        diaryId: this.props.match.params.diaryId,
-        entries: fetchEntries()
-      }
-    })
+    const { match, name, dispatch, entries } = this.props
+    const diaryId = match.params.diaryId
+
+    if (name && !entries) {
+      dispatch(loadEntriesRequest({ diaryId, name }))
+    } else {
+      dispatch(loadDiariesRequest())
+    }
   }
 
   render() {
-    return <div>{this.props.entries.map((e, i) => <p key={i}>{e}</p>)}</div>
+    return this.props.entries ? (
+      <div>{this.props.entries.map((e, i) => <p key={i}>{e}</p>)}</div>
+    ) : (
+      <div>No entries found</div>
+    )
   }
 }
 
 Diary.propTypes = {
-  entries: arrayOf(string).isRequired
+  entries: arrayOf(string),
+  name: string
 }
 
-const mapStateToProps = (state, props) => {
+export const mapStateToProps = (state, props) => {
   const { diaries } = state
 
   const diaryId = props.match.params.diaryId
 
-  const diary = diaries.find(d => d.id === diaryId)
+  const { name, entries } = diaries.find(d => d.id === diaryId) || {}
 
-  const entries = (diary && diary.entries) || []
-
-  return { entries }
+  return { name, entries }
 }
 
 export default connect(mapStateToProps)(Diary)

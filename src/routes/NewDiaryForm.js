@@ -11,8 +11,6 @@ import TextField from 'material-ui/TextField'
 import { updateDiaryFields, saveNewDiaryRequest } from '../store/actions'
 
 export class NewDiaryForm extends Component {
-  componentDidMount() {}
-
   render() {
     const { name, description, dispatch } = this.props
     return (

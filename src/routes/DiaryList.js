@@ -7,7 +7,7 @@ import AddIcon from '@material-ui/icons/Add'
 import List, { ListItem, ListItemText } from 'material-ui/List'
 import Grid from 'material-ui/Grid'
 
-import { loadDiaries } from '../store/actions'
+import { loadDiariesRequest } from '../store/actions'
 
 import './DiaryList.css'
 
@@ -19,7 +19,7 @@ const listStyles = theme => ({
   }
 })
 
-const SimpleList = ({ classes, diaries }) => (
+export const SimpleList = ({ classes, diaries }) => (
   <div className={classes.root}>
     <List component="nav">
       {diaries.map((d, i) => (
@@ -34,9 +34,9 @@ const SimpleList = ({ classes, diaries }) => (
 )
 const StyledList = withStyles(listStyles)(SimpleList)
 
-class DiaryList extends React.Component {
+export class DiaryList extends React.Component {
   componentDidMount() {
-    this.props.dispatch(loadDiaries())
+    this.props.dispatch(loadDiariesRequest())
   }
 
   render() {

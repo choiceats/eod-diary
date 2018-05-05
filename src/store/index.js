@@ -7,10 +7,10 @@ import rootReducer from './reducers'
 
 const sagaMiddleware = createSagaMiddleware()
 
-export function createAppStore() {
+export function createAppStore(context = {}) {
   const store = createStore(rootReducer, applyMiddleware(sagaMiddleware))
 
-  sagaMiddleware.run(rootSaga)
+  sagaMiddleware.run(rootSaga, context)
 
   return store
 }

@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { Router, Route } from 'react-router-dom'
 
 import { login } from './services/firebase'
+import browserHistory from './services/history'
 import { createAppStore } from './store'
 import Navbar from './components/Navbar'
 import DiaryList from './routes/DiaryList'
@@ -39,6 +40,7 @@ export class App extends Component {
   constructor(props) {
     super(props)
     this.state = { user: null }
+    this.history = browserHistory
     this.store = createAppStore()
   }
 
@@ -57,7 +59,7 @@ export class App extends Component {
     return (
       <div className="App">
         <Provider store={this.store}>
-          <Router>
+          <Router history={this.history}>
             <React.Fragment>
               <Navbar />
               <Route exact path="/" component={DiaryList} />

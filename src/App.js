@@ -1,21 +1,22 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { Router, Route } from 'react-router-dom'
 
 import { login } from './services/firebase'
+import browserHistory from './services/history'
 import { createAppStore } from './store'
 import Navbar from './components/Navbar'
 import DiaryList from './routes/DiaryList'
 import Diary from './routes/Diary'
 import NewDiaryForm from './routes/NewDiaryForm'
-import { setItem, fetchDiaries } from './services/localStorage'
+import { setItem, fetchDiaries } from './services/diaryApi'
 
 import './App.css'
 
 function seedDiaries() {
-  const diaries = JSON.parse(fetchDiaries())
+  const diaries = fetchDiaries()
 
-  if (diaries === null) {
+  if (diaries.length === 0) {
     const seed = [
       {
         description: 'work',
@@ -35,10 +36,11 @@ function seedDiaries() {
   }
 }
 
-class App extends Component {
+export class App extends Component {
   constructor(props) {
     super(props)
     this.state = { user: null }
+    this.history = browserHistory
     this.store = createAppStore()
   }
 
@@ -57,7 +59,7 @@ class App extends Component {
     return (
       <div className="App">
         <Provider store={this.store}>
-          <Router>
+          <Router history={this.history}>
             <React.Fragment>
               <Navbar />
               <Route exact path="/" component={DiaryList} />

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
-import { Router, Route } from 'react-router-dom'
+import { Router, Route, Switch } from 'react-router-dom'
 
 import { login } from './services/firebase'
 import browserHistory from './services/history'
@@ -13,7 +13,7 @@ import { setItem, fetchDiaries } from './services/diaryApi'
 
 import './App.css'
 
-function seedDiaries() {
+export function seedDiaries() {
   const diaries = fetchDiaries()
 
   if (diaries.length === 0) {
@@ -22,13 +22,13 @@ function seedDiaries() {
         description: 'work',
         dateCreated: '2018-05-01',
         id: '1',
-        entries: []
+        entries: ['Today I did some work', 'Today I did some work2']
       },
       {
         description: 'personal',
         dateCreated: '2018-05-02',
         id: '2',
-        entries: []
+        entries: ['Today life is awesome', 'Today life is awesome2']
       }
     ]
 
@@ -63,8 +63,10 @@ export class App extends Component {
             <React.Fragment>
               <Navbar />
               <Route exact path="/" component={DiaryList} />
-              <Route exact path="/diary/new" component={NewDiaryForm} />
-              <Route exact path="/diary/:diaryId" component={Diary} />
+              <Switch>
+                <Route exact path="/diary/new" component={NewDiaryForm} />
+                <Route exact path="/diary/:diaryId" component={Diary} />
+              </Switch>
             </React.Fragment>
           </Router>
         </Provider>

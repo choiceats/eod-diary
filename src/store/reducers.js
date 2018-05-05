@@ -1,17 +1,18 @@
 import { combineReducers } from 'redux'
 import {
-  LOAD_DIARIES,
-  LOAD_ENTRIES,
+  LOAD_DIARIES_SUCCESS,
+  LOAD_ENTRIES_SUCCESS,
   UPDATE_NEW_DIARY_FIELDS,
   SAVE_NEW_DIARY_SUCCESS
 } from './actions'
 
 export function diaries(state = [], action) {
+  // TODO: Add error handling
   switch (action.type) {
-    case LOAD_DIARIES:
+    case LOAD_DIARIES_SUCCESS:
       return action.payload.diaries
 
-    case LOAD_ENTRIES:
+    case LOAD_ENTRIES_SUCCESS:
       const idToUpdate = state.findIndex(
         entry => entry.id === action.payload.diaryId
       )
@@ -32,6 +33,7 @@ export function diaries(state = [], action) {
 }
 
 export function newDiary(state = { name: '', description: '' }, action) {
+  // TODO: Add error handling
   switch (action.type) {
     case UPDATE_NEW_DIARY_FIELDS:
       return {

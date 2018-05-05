@@ -1,5 +1,10 @@
 import { diaries, newDiary } from '../reducers'
-import { LOAD_DIARIES, LOAD_ENTRIES, UPDATE_NEW_DIARY_FIELDS } from '../actions'
+import {
+  LOAD_DIARIES,
+  LOAD_ENTRIES,
+  UPDATE_NEW_DIARY_FIELDS,
+  SAVE_NEW_DIARY_SUCCESS
+} from '../actions'
 jest.mock('../../services/diaryApi')
 
 const haskellRulz = 'λaskell rulz'
@@ -160,5 +165,27 @@ describe(`${newDiary.name} reducer`, () => {
 
     expect(newState.name).toEqual(haskellRulz)
     expect(newState.description).toEqual(haskellRulz)
+  })
+
+  test(`${SAVE_NEW_DIARY_SUCCESS} clears form state`, () => {
+    const mockState = {
+      name: 'goats',
+      description: 'hamsters'
+    }
+
+    const mockAction = {
+      type: SAVE_NEW_DIARY_SUCCESS,
+      payload: {
+        id: haskellRulz,
+        name: haskellRulz,
+        description: haskellRulz,
+        entries: []
+      }
+    }
+
+    const newState = newDiary(mockState, mockAction)
+
+    expect(newState.name).toEqual('')
+    expect(newState.description).toEqual('')
   })
 })

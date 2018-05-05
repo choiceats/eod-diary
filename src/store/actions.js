@@ -13,9 +13,6 @@ export const updateDiaryFields = fields => ({
   payload: { ...fields }
 })
 
-export const clearDiaryFields = () =>
-  updateDiaryFields({ name: '', description: '' })
-
 export const saveNewDiaryRequest = ({ name, description }) => ({
   type: SAVE_NEW_DIARY_REQUEST,
   payload: {

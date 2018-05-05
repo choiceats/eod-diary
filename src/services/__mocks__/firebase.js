@@ -1,1 +1,1 @@
-export const login = () => null
+export const login = () => jest.fn()

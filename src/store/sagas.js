@@ -1,9 +1,5 @@
 import { call, put, takeEvery, all } from 'redux-saga/effects'
-import {
-  saveNewDiarySuccess,
-  saveNewDiaryFailure,
-  clearDiaryFields
-} from './actions'
+import { saveNewDiarySuccess, saveNewDiaryFailure } from './actions'
 import browserHistory from '../services/history'
 
 import { addDiary } from '../services/diaryApi'
@@ -14,7 +10,6 @@ function* saveDiarySaga(action) {
   // successful save
   if (typeof res.id === 'string' && res.id.length > 0) {
     yield put(saveNewDiarySuccess(res))
-    yield put(clearDiaryFields())
     yield call(browserHistory.push, '/')
   } else {
     yield put(

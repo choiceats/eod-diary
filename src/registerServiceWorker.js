@@ -19,8 +19,9 @@ const isLocalhost = Boolean(
 )
 
 export default function register() {
+  /* eslint-disable no-undef */
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
-    // eslint-disable-line no-undef
+    /* eslint-enable no-undef */
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location) // eslint-disable-line no-undef
     if (publicUrl.origin !== window.location.origin) {
@@ -40,8 +41,9 @@ export default function register() {
         // Add some additional logging to localhost, pointing developers to the
         // service worker/PWA documentation.
         navigator.serviceWorker.ready.then(() => {
+          /* eslint-disable no-console */
           console.log(
-            // eslint-disable-line no-console
+            /* eslint-enable no-console */
             'This web app is being served cache-first by a service ' +
               'worker. To learn more, visit https://goo.gl/SC7cgQ'
           )
@@ -104,8 +106,9 @@ function checkValidServiceWorker(swUrl) {
       }
     })
     .catch(() => {
+      /* eslint-disable no-console */
       console.log(
-        // eslint-disable-line no-console
+        /* eslint-enable no-console */
         'No internet connection found. App is running in offline mode.'
       )
     })

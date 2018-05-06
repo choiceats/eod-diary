@@ -42,7 +42,7 @@ describe('Routes: Diary', () => {
     loadDiariesRequest.mockReset()
     props.name = 'has'
 
-    const wrapper = shallow(<Diary {...props} />)
+    shallow(<Diary {...props} />)
 
     expect(loadEntriesRequest.mock.calls.length).toBe(1)
     expect(loadDiariesRequest.mock.calls.length).toBe(0)
@@ -52,7 +52,7 @@ describe('Routes: Diary', () => {
     loadEntriesRequest.mockReset()
     loadDiariesRequest.mockReset()
 
-    const wrapper = shallow(<Diary {...props} />)
+    shallow(<Diary {...props} />)
 
     expect(loadEntriesRequest.mock.calls.length).toBe(0)
     expect(loadDiariesRequest.mock.calls.length).toBe(1)

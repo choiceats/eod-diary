@@ -29,7 +29,7 @@ function* watchSaveDiarySaga() {
   yield takeEvery('SAVE_NEW_DIARY_REQUEST', saveDiarySaga)
 }
 
-function* loadDiariesSaga(action) {
+function* loadDiariesSaga() {
   const res = fetchDiaries()
 
   // successful save

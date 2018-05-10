@@ -17,7 +17,7 @@ describe('Routes: DiaryList', () => {
 
     const preRenderLoadDiariesCount = loadDiariesRequest.mock.calls.length
 
-    const wrapper = shallow(<DiaryList {...props} />)
+    shallow(<DiaryList {...props} />)
 
     const postRenderLoadDiariesCount = loadDiariesRequest.mock.calls.length
 

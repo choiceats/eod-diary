@@ -4,7 +4,7 @@ import { shallow } from 'enzyme'
 
 import { NewDiaryForm } from '../NewDiaryForm'
 
-import { updateDiaryFields, saveNewDiaryRequest } from '../../store/actions'
+import { updateDiaryFields } from '../../store/actions'
 jest.mock('../../store/actions')
 
 describe('Routes: NewDiaryForm', () => {

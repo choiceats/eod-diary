@@ -98,8 +98,6 @@ describe(`${diaries.name} reducer`, () => {
         entries: ['iguanas3a', 'iguanas3b']
       }
     ]
-    const firstEntry = { ...mockState[0] }
-    const lastEntry = { ...mockState[mockState.length - 1] }
 
     const mockAction = {
       type: LOAD_ENTRIES_SUCCESS,

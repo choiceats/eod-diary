@@ -19,9 +19,11 @@ const isLocalhost = Boolean(
 )
 
 export default function register() {
+  /* eslint-disable no-undef */
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+    /* eslint-enable no-undef */
     // The URL constructor is available in all browsers that support SW.
-    const publicUrl = new URL(process.env.PUBLIC_URL, window.location)
+    const publicUrl = new URL(process.env.PUBLIC_URL, window.location) // eslint-disable-line no-undef
     if (publicUrl.origin !== window.location.origin) {
       // Our service worker won't work if PUBLIC_URL is on a different origin
       // from what our page is served on. This might happen if a CDN is used to
@@ -30,7 +32,7 @@ export default function register() {
     }
 
     window.addEventListener('load', () => {
-      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`
+      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js` // eslint-disable-line no-undef
 
       if (isLocalhost) {
         // This is running on localhost. Lets check if a service worker still exists or not.
@@ -39,7 +41,9 @@ export default function register() {
         // Add some additional logging to localhost, pointing developers to the
         // service worker/PWA documentation.
         navigator.serviceWorker.ready.then(() => {
+          /* eslint-disable no-console */
           console.log(
+            /* eslint-enable no-console */
             'This web app is being served cache-first by a service ' +
               'worker. To learn more, visit https://goo.gl/SC7cgQ'
           )
@@ -65,19 +69,19 @@ function registerValidSW(swUrl) {
               // the fresh content will have been added to the cache.
               // It's the perfect time to display a "New content is
               // available; please refresh." message in your web app.
-              console.log('New content is available; please refresh.')
+              console.log('New content is available; please refresh.') // eslint-disable-line no-console
             } else {
               // At this point, everything has been precached.
               // It's the perfect time to display a
               // "Content is cached for offline use." message.
-              console.log('Content is cached for offline use.')
+              console.log('Content is cached for offline use.') // eslint-disable-line no-console
             }
           }
         }
       }
     })
     .catch(error => {
-      console.error('Error during service worker registration:', error)
+      console.error('Error during service worker registration:', error) // eslint-disable-line no-console
     })
 }
 
@@ -102,7 +106,9 @@ function checkValidServiceWorker(swUrl) {
       }
     })
     .catch(() => {
+      /* eslint-disable no-console */
       console.log(
+        /* eslint-enable no-console */
         'No internet connection found. App is running in offline mode.'
       )
     })

@@ -4,9 +4,11 @@
   "private": true,
   "dependencies": {
     "@material-ui/icons": "^1.0.0-beta.43",
-    "firebase": "^4.13.1",
-    "firebaseui": "^2.7.0",
+    "firebase": "^5.0.4",
+    "firebaseui": "^3.0.0",
+    "flow-bin": "^0.74.0",
     "material-ui": "^1.0.0-beta.44",
+    "npm": "^6.1.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-redux": "^5.0.7",
@@ -21,7 +23,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "precommit": "pretty-quick --staged"
+    "precommit": "pretty-quick --staged",
+    "flow": "flow"
   },
   "devDependencies": {
     "enzyme": "^3.3.0",
@@ -29,7 +32,7 @@
     "eslint": "^4.19.1",
     "eslint-plugin-react": "^7.7.0",
     "husky": "^0.14.3",
-    "prettier": "1.12.1",
+    "prettier": "1.13.4",
     "pretty-quick": "^1.4.1"
   },
   "prettier": {

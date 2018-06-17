@@ -1,5 +1,5 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import * as firebase from 'firebase'
 import { Link } from 'react-router-dom'
 import { withStyles } from 'material-ui/styles'
 import Button from 'material-ui/Button'
@@ -7,7 +7,7 @@ import AddIcon from '@material-ui/icons/Add'
 import List, { ListItem, ListItemText } from 'material-ui/List'
 import Grid from 'material-ui/Grid'
 
-import { loadDiariesRequest } from '../store/actions'
+import Navbar from '../components/Navbar'
 
 import './DiaryList.css'
 
@@ -22,10 +22,10 @@ const listStyles = theme => ({
 export const SimpleList = ({ classes, diaries }) => (
   <div className={classes.root}>
     <List component="nav">
-      {diaries.map((d, i) => (
-        <Link key={i} to={`/diary/${d.id}`}>
+      {Object.keys(diaries).map(diaryKey => (
+        <Link key={diaryKey} to={`/diary/${diaryKey}`}>
           <ListItem button>
-            <ListItemText>{d.description}</ListItemText>
+            <ListItemText>{diaries[diaryKey].name}</ListItemText>
           </ListItem>
         </Link>
       ))}
@@ -35,35 +35,47 @@ export const SimpleList = ({ classes, diaries }) => (
 const StyledList = withStyles(listStyles)(SimpleList)
 
 export class DiaryList extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      loadingStatus: 'loading',
+      diaries: []
+    }
+  }
+
   componentDidMount() {
-    this.props.dispatch(loadDiariesRequest())
+    this.diaryListRef = firebase.database().ref('diaries')
+    this.diaryListRef.on('value', snap => {
+      this.setState({ diaries: snap.val() })
+    })
+  }
+
+  componentWillUnmount() {
+    this.diaryListRef.off('value')
   }
 
   render() {
-    const { diaries } = this.props
+    const { diaries } = this.state
 
     return (
-      <Grid container className="diaryList">
-        <StyledList diaries={diaries} />
-        <Button
-          variant="fab"
-          color="primary"
-          aria-label="add"
-          to="/diary/new"
-          component={Link}
-          style={{ position: 'fixed', right: 15, bottom: 15 }}
-        >
-          <AddIcon />
-        </Button>
-      </Grid>
+      <React.Fragment>
+        <Navbar title={'My Diaries'} />
+        <Grid container className="diaryList">
+          <StyledList diaries={diaries} />
+          <Button
+            variant="fab"
+            color="primary"
+            aria-label="add"
+            to="/diary/new"
+            component={Link}
+            style={{ position: 'fixed', right: 15, bottom: 15 }}
+          >
+            <AddIcon />
+          </Button>
+        </Grid>
+      </React.Fragment>
     )
   }
 }
 
-DiaryList.defaultProps = {
-  diaries: []
-}
-
-const mapStateToProps = ({ diaries }) => ({ diaries })
-
-export default connect(mapStateToProps)(DiaryList)
+export default DiaryList

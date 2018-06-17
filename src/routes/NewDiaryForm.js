@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { string } from 'prop-types'
-import { connect } from 'react-redux'
+import * as firebase from 'firebase'
 
 import { Link } from 'react-router-dom'
 import Grid from 'material-ui/Grid'
@@ -8,11 +8,53 @@ import Button from 'material-ui/Button'
 import AddIcon from '@material-ui/icons/Add'
 import TextField from 'material-ui/TextField'
 
-import { updateDiaryFields, saveNewDiaryRequest } from '../store/actions'
-
 export class NewDiaryForm extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      diary: {
+        name: '',
+        description: ''
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.diaryRef = firebase.database().ref('diaries')
+  }
+
+  handleNameChange(event) {
+    const { value } = event.target
+    this.setState(prevState => ({
+      diary: {
+        ...prevState.diary,
+        name: value
+      }
+    }))
+  }
+
+  handleDescriptionChange(event) {
+    const { value } = event.target
+    this.setState(prevState => ({
+      diary: {
+        ...prevState.diary,
+        description: value
+      }
+    }))
+  }
+
+  handleSaveDiary() {
+    const newDiaryRef = this.diaryRef.push()
+    newDiaryRef.set({
+      username: 'Nathan',
+      created: Date.now(),
+      name: this.state.diary.name,
+      description: this.state.diary.description
+    })
+  }
+
   render() {
-    const { name, description, dispatch } = this.props
+    const { name, description } = this.state.diary
     return (
       <div>
         <form style={{ padding: 24 }}>
@@ -23,9 +65,7 @@ export class NewDiaryForm extends Component {
                 id="new-diary-name"
                 label="Name"
                 margin="normal"
-                onChange={e =>
-                  dispatch(updateDiaryFields({ name: e.target.value }))
-                }
+                onChange={e => this.handleNameChange(e)}
                 required
                 value={name}
               />
@@ -37,9 +77,7 @@ export class NewDiaryForm extends Component {
                 label="Description"
                 margin="normal"
                 multiline
-                onChange={e =>
-                  dispatch(updateDiaryFields({ description: e.target.value }))
-                }
+                onChange={e => this.handleDescriptionChange(e)}
                 required
                 rows={2}
                 rowsMax={4}
@@ -53,7 +91,7 @@ export class NewDiaryForm extends Component {
           color="primary"
           aria-label="add"
           style={{ position: 'fixed', right: 15, bottom: 15 }}
-          onClick={() => dispatch(saveNewDiaryRequest({ name, description }))}
+          onClick={() => this.handleSaveDiary()}
           to="/"
           component={Link}
           disabled={!name.length || !description.length}
@@ -65,20 +103,9 @@ export class NewDiaryForm extends Component {
   }
 }
 
-//TODO: This component is "cheating" and handling the routing itself when the saga that intercepts the action should probably take control of routing
-
 NewDiaryForm.propTypes = {
   name: string.isRequired,
   description: string.isRequired
 }
 
-const mapStateToProps = state => {
-  const { name, description } = state.newDiary
-
-  return {
-    name,
-    description
-  }
-}
-
-export default connect(mapStateToProps)(NewDiaryForm)
+export default NewDiaryForm

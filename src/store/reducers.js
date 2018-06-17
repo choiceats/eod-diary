@@ -1,12 +1,14 @@
+/* @flow */
 import { combineReducers } from 'redux'
 import {
   LOAD_DIARIES_SUCCESS,
   LOAD_ENTRIES_SUCCESS,
   UPDATE_NEW_DIARY_FIELDS,
-  SAVE_NEW_DIARY_SUCCESS
+  SAVE_NEW_DIARY_SUCCESS,
+  SAVE_NEW_ENTRY_SUCCESS
 } from './actions'
 
-export function diaries(state = [], action) {
+export function diaries(state: DiaryState = [], action) {
   // TODO: Add error handling
   switch (action.type) {
     case LOAD_DIARIES_SUCCESS:
@@ -27,11 +29,29 @@ export function diaries(state = [], action) {
         ...state.slice(idToUpdate + 1)
       ]
 
+    case SAVE_NEW_ENTRY_SUCCESS: {
+      break
+    }
+
     default:
       return state
   }
 }
 
+export function entries(state = {}, action) {
+  switch (action.type) {
+    case SAVE_NEW_ENTRY_SUCCESS: {
+      const { entry } = action.payload
+      return {
+        ...state,
+        [entry.id]: entry
+      }
+    }
+
+    default:
+      return state
+  }
+}
 export function newDiary(state = { name: '', description: '' }, action) {
   // TODO: Add error handling
   switch (action.type) {
@@ -54,5 +74,6 @@ export function newDiary(state = { name: '', description: '' }, action) {
 
 export default combineReducers({
   diaries,
-  newDiary
+  newDiary,
+  entries
 })

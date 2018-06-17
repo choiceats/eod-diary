@@ -1,15 +1,21 @@
 import { call, put, takeEvery, all } from 'redux-saga/effects'
-import {
-  saveNewDiarySuccess,
-  saveNewDiaryFailure,
-  loadDiariesSuccess,
-  loadDiariesFailure,
-  loadEntriesSuccess,
-  loadEntriesFailure
-} from './actions'
+import { saveNewDiarySuccess, saveNewDiaryFailure } from './actions'
 import browserHistory from '../services/history'
 
-import { addDiary, fetchDiaries, fetchEntries } from '../services/diaryApi'
+import { addDiary, addEntryToDiary } from '../services/diaryApi'
+
+function* saveNewEntrySaga(action) {
+  const { diaryId, entry } = action.payload
+  const res = yield addEntryToDiary(entry, diaryId)
+  yield put({
+    type: 'SAVE_NEW_ENTRY_SUCCESS',
+    payload: { entry: res, diaryId }
+  })
+}
+
+function* watchSaveEntry() {
+  yield takeEvery('SAVE_NEW_ENTRY', saveNewEntrySaga)
+}
 
 function* saveDiarySaga(action) {
   const res = addDiary(action.payload)
@@ -29,42 +35,6 @@ function* watchSaveDiarySaga() {
   yield takeEvery('SAVE_NEW_DIARY_REQUEST', saveDiarySaga)
 }
 
-function* loadDiariesSaga() {
-  const res = fetchDiaries()
-
-  // successful save
-  if (res.length > 0) {
-    yield put(loadDiariesSuccess(res))
-  } else {
-    yield put(loadDiariesFailure('Error. Failed to load new diaries'))
-  }
-}
-
-function* watchLoadDiariesSaga() {
-  yield takeEvery('LOAD_DIARIES_REQUEST', loadDiariesSaga)
-}
-
-function* loadEntriesSaga(action) {
-  const res = fetchEntries(action.payload.diaryId)
-
-  // successful save
-  if (res.length > 0) {
-    yield put(loadEntriesSuccess(res))
-  } else {
-    yield put(
-      loadEntriesFailure(`Error. Failed to load diary ${action.payload.name}`)
-    )
-  }
-}
-
-function* watchLoadEntriesSaga() {
-  yield takeEvery('LOAD_ENTRIES_REQUEST', loadEntriesSaga)
-}
-
 export function* rootSaga() {
-  yield all([
-    watchSaveDiarySaga(),
-    watchLoadDiariesSaga(),
-    watchLoadEntriesSaga()
-  ])
+  yield all([watchSaveDiarySaga(), watchSaveEntry()])
 }

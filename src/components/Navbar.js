@@ -1,5 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import AppBar from 'material-ui/AppBar'
 import Toolbar from 'material-ui/Toolbar'
@@ -15,27 +14,8 @@ const styles = {
 }
 
 export function Navbar(props) {
-  const { classes, location, diaries } = props
+  const { classes, location, title } = props
 
-  const locationToTitle = () => {
-    const { pathname } = location
-    if (pathname === '/') {
-      return 'My Diaries'
-    }
-
-    const matches = pathname.match(/diary\/([^/]+)/)
-    if (matches) {
-      const diaryId = matches[1]
-      const diary = diaries.find(d => d.id === diaryId)
-      if (diary) {
-        return diary.description
-      }
-    }
-
-    return 'EoDiaries'
-  }
-
-  const title = locationToTitle(location)
   const backButton =
     props.history.length > 1 && location.pathname !== '/' ? (
       <IconButton onClick={() => props.history.goBack()} color="primary">
@@ -56,6 +36,4 @@ export function Navbar(props) {
   )
 }
 
-export default withRouter(
-  connect(({ diaries }) => ({ diaries }))(withStyles(styles)(Navbar))
-)
+export default withRouter(withStyles(styles)(Navbar))

@@ -12,6 +12,10 @@ export const SAVE_NEW_DIARY_REQUEST = 'SAVE_NEW_DIARY_REQUEST'
 export const SAVE_NEW_DIARY_SUCCESS = 'SAVE_NEW_DIARY_SUCCESS'
 export const SAVE_NEW_DIARY_FAILURE = 'SAVE_NEW_DIARY_FAILURE'
 
+export const SAVE_NEW_ENTRY = 'SAVE_NEW_ENTRY'
+export const SAVE_NEW_ENTRY_SUCCESS = 'SAVE_NEW_ENTRY_SUCCESS'
+export const SAVE_NEW_ENTRY_FAILURE = 'SAVE_NEW_ENTRY_FAILURE'
+
 export const updateDiaryFields = fields => ({
   type: UPDATE_NEW_DIARY_FIELDS,
   payload: { ...fields }
@@ -23,6 +27,16 @@ export const saveNewDiaryRequest = ({ name, description }) => ({
     name,
     description
   }
+})
+
+export const saveNewEntry = (entry, diaryId) => ({
+  type: SAVE_NEW_ENTRY,
+  payload: { entry, diaryId }
+})
+
+export const saveNewEntrySuccess = ({ entry }) => ({
+  type: SAVE_NEW_DIARY_SUCCESS,
+  payload: { entry }
 })
 
 export const saveNewDiarySuccess = ({

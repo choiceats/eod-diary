@@ -1,20 +1,40 @@
 import React, { Component } from 'react'
 import { string } from 'prop-types'
 import * as firebase from 'firebase'
-
 import { Link } from 'react-router-dom'
-import Grid from 'material-ui/Grid'
-import Button from 'material-ui/Button'
+import Quill from 'quill'
+
+import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'
-import TextField from 'material-ui/TextField'
+
+import Navbar from '../components/Navbar'
+
+import { getCurrentUser } from '../services/user'
+
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
 
 class NewEntryForm extends Component {
   constructor(props) {
     super(props)
 
     const { diaryId } = props.match.params
-    this.state = { entry: '' }
-    this.entryRef = firebase.database().ref(`entries/${diaryId}`)
+    const currentUser = getCurrentUser()
+    this.entryRef = firebase
+      .database()
+      .ref(`entries/${currentUser.uid}/${diaryId}`)
+    this.editorRef = React.createRef()
+  }
+
+  componentDidMount() {
+    this.quillEditor = new Quill(this.editorRef.current, {
+      theme: 'snow',
+      modules: {
+        toolbar: [['bold', 'italic', 'underline', 'strike']]
+      }
+    })
+    this.quillEditor.setContents(this.props.entry)
   }
 
   handleEntryChange(event) {
@@ -25,39 +45,31 @@ class NewEntryForm extends Component {
   }
 
   saveNewEntry() {
-    const { entry } = this.state
     this.entryRef.push().set({
       createdBy: 'Nathan',
       created: Date.now(),
-      entry
+      entry: this.quillEditor.getContents(),
+      rawHTML: this.quillEditor.root.innerHTML
     })
   }
 
   render() {
-    const { entry } = this.state
+    const { diaryId } = this.props.match.params
     return (
       <div>
-        <form style={{ padding: 24 }}>
-          <Grid container spacing={24}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                id="new-entry"
-                label="Entry"
-                margin="normal"
-                onChange={e => this.handleEntryChange(e)}
-                value={entry}
-              />
-            </Grid>
+        <Navbar title="New Entry" />
+        <Grid container spacing={24}>
+          <Grid item xs={12}>
+            <div ref={this.editorRef} />
           </Grid>
-        </form>
+        </Grid>
         <Button
           variant="fab"
           color="primary"
           aria-label="add"
           style={{ position: 'fixed', right: 15, bottom: 15 }}
           onClick={() => this.saveNewEntry()}
-          to="/"
+          to={`/diary/${diaryId}`}
           component={Link}
         >
           <AddIcon />

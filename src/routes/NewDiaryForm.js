@@ -3,10 +3,12 @@ import { string } from 'prop-types'
 import * as firebase from 'firebase'
 
 import { Link } from 'react-router-dom'
-import Grid from 'material-ui/Grid'
-import Button from 'material-ui/Button'
+import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'
-import TextField from 'material-ui/TextField'
+import TextField from '@material-ui/core/TextField'
+
+import { getCurrentUser } from '../services/user'
 
 export class NewDiaryForm extends Component {
   constructor(props) {
@@ -20,7 +22,8 @@ export class NewDiaryForm extends Component {
   }
 
   componentDidMount() {
-    this.diaryRef = firebase.database().ref('diaries')
+    const currentUser = getCurrentUser()
+    this.diaryRef = firebase.database().ref(`diaries/${currentUser.uid}`)
   }
 
   handleNameChange(event) {

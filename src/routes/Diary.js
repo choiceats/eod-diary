@@ -2,10 +2,11 @@ import React, { Component } from 'react'
 import { arrayOf, string } from 'prop-types'
 import * as firebase from 'firebase'
 import { Link } from 'react-router-dom'
-
-import Button from 'material-ui/Button'
+import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'
 
+import { getCurrentUser } from '../services/user'
+import EntryCard from '../components/EntryCard'
 import Navbar from '../components/Navbar'
 
 export class Diary extends Component {
@@ -17,13 +18,14 @@ export class Diary extends Component {
   componentDidMount() {
     const { match } = this.props
     const diaryId = match.params.diaryId
+    const currentUser = getCurrentUser()
     const fbDb = firebase.database()
-    this.diaryRef = fbDb.ref(`diaries/${diaryId}`)
+    this.diaryRef = fbDb.ref(`diaries/${currentUser.uid}/${diaryId}`)
     this.diaryRef.on('value', snap => {
       this.setState({ diary: snap.val() })
     })
 
-    this.entriesRef = fbDb.ref(`entries/${diaryId}`)
+    this.entriesRef = fbDb.ref(`entries/${currentUser.uid}/${diaryId}`)
     this.entriesRef.on('value', snap => {
       this.setState({ entries: snap.val() })
     })
@@ -41,15 +43,7 @@ export class Diary extends Component {
     return (
       <React.Fragment>
         <Navbar title={diary && diary.name} />
-        {entries ? (
-          <div>
-            {Object.keys(entries).map(entryKey => (
-              <p key={entryKey}>{entries[entryKey].entry}</p>
-            ))}
-          </div>
-        ) : (
-          <div>No entries found</div>
-        )}
+        {this.renderEntries(entries)}
         <Button
           variant="fab"
           color="primary"
@@ -61,6 +55,20 @@ export class Diary extends Component {
           <AddIcon />
         </Button>
       </React.Fragment>
+    )
+  }
+
+  renderEntries(entries) {
+    if (!entries) {
+      return <div>No entries found</div>
+    }
+
+    return (
+      <div>
+        {Object.keys(entries).map(entryKey => (
+          <EntryCard entryKey={entryKey} entry={entries[entryKey]} />
+        ))}
+      </div>
     )
   }
 }

@@ -1,24 +1,32 @@
 import * as firebase from 'firebase'
+import * as firebaseui from 'firebaseui'
 
-export async function login(callback) {
+import { setCurrentUser } from './user'
+
+export function login(callback) {
   const auth = firebase.auth()
   auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-
-  firebase.auth().onAuthStateChanged(user => {
-    if (!user) {
-      const firebaseProvider = new firebase.auth.GoogleAuthProvider()
-      firebase
-        .auth()
-        .signInWithPopup(firebaseProvider)
-        .then(result => {
-          const { user: signInUser } = result
-          if (result.credential) {
-            signInUser.token = result.credential.accessToken
-          }
-          callback(signInUser)
-        })
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      document.getElementById('firebaseui-auth-container').remove()
+      setCurrentUser(user)
+      callback()
     } else {
-      callback(user)
+      handleSignedOutUser(auth)
     }
   })
+}
+
+function handleSignedOutUser(auth) {
+  const config = {
+    signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
+    signInFlow: 'popup',
+    callbacks: {
+      signInSuccessWithAuthResult: authResult => {
+        return false
+      }
+    }
+  }
+  const ui = new firebaseui.auth.AuthUI(auth)
+  ui.start('#firebaseui-auth-container', config)
 }

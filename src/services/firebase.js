@@ -1,4 +1,7 @@
-import * as firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/database'
+
 import * as firebaseui from 'firebaseui'
 
 import { setCurrentUser } from './user'
@@ -8,7 +11,6 @@ export function login(callback) {
   auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
   auth.onAuthStateChanged(user => {
     if (user) {
-      document.getElementById('firebaseui-auth-container').remove()
       setCurrentUser(user)
       callback()
     } else {
@@ -18,15 +20,9 @@ export function login(callback) {
 }
 
 function handleSignedOutUser(auth) {
-  const config = {
-    signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
-    signInFlow: 'popup',
-    callbacks: {
-      signInSuccessWithAuthResult: authResult => {
-        return false
-      }
-    }
-  }
-  const ui = new firebaseui.auth.AuthUI(auth)
-  ui.start('#firebaseui-auth-container', config)
+  const provider = new firebase.auth.GoogleAuthProvider()
+  auth.signInWithRedirect(provider)
+  auth.getRedirectResult().then(result => {
+    setCurrentUser(result.user)
+  })
 }

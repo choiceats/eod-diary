@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { string } from 'prop-types'
-import * as firebase from 'firebase'
+import firebase from 'firebase/app'
 
 import { Link } from 'react-router-dom'
 import Grid from '@material-ui/core/Grid'

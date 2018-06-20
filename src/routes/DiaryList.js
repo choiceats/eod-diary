@@ -1,5 +1,5 @@
 import React from 'react'
-import * as firebase from 'firebase'
+import firebase from 'firebase/app'
 import { Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'

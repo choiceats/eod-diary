@@ -13,19 +13,26 @@ import Navbar from '../components/Navbar'
 
 import './DiaryList.css'
 
-export const SimpleList = ({ classes, diaries }) => (
-  <div className={classes.root}>
-    <List component="nav">
-      {Object.keys(diaries).map(diaryKey => (
-        <Link key={diaryKey} to={`/diary/${diaryKey}`}>
-          <ListItem button>
-            <ListItemText>{diaries[diaryKey].name}</ListItemText>
-          </ListItem>
-        </Link>
-      ))}
-    </List>
-  </div>
-)
+export const SimpleList = ({ classes, diaries }) => {
+  if (!diaries) {
+    return null
+  }
+
+  return (
+    <div className={classes.root}>
+      <List component="nav">
+        {Object.keys(diaries).map(diaryKey => (
+          <Link key={diaryKey} to={`/diary/${diaryKey}`}>
+            <ListItem button>
+              <ListItemText>{diaries[diaryKey].name}</ListItemText>
+            </ListItem>
+          </Link>
+        ))}
+      </List>
+    </div>
+  )
+}
+
 const StyledSimpleList = StyledList(SimpleList)
 
 export class DiaryList extends React.Component {

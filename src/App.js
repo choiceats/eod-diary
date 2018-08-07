@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
-import { Provider } from 'react-redux'
 import { Router, Route, Switch } from 'react-router-dom'
 
 import { login } from './services/firebase'
 import browserHistory from './services/history'
-import { createAppStore } from './store'
 import DiaryList from './routes/DiaryList'
 import Diary from './routes/Diary'
 import NewDiaryForm from './routes/NewDiaryForm'
@@ -18,7 +16,6 @@ export class App extends Component {
     super(props)
     this.state = { user: null }
     this.history = browserHistory
-    this.store = createAppStore()
   }
 
   componentDidMount() {
@@ -34,24 +31,22 @@ export class App extends Component {
 
     return (
       <div className="App">
-        <Provider store={this.store}>
-          <React.StrictMode>
-            <Router history={this.history}>
-              <React.Fragment>
-                <Route exact path="/" component={DiaryList} />
-                <Switch>
-                  <Route exact path="/diary/new" component={NewDiaryForm} />
-                  <Route exact path="/diary/:diaryId" component={Diary} />
-                  <Route
-                    exact
-                    path="/diary/:diaryId/entry/new"
-                    component={NewEntryForm}
-                  />
-                </Switch>
-              </React.Fragment>
-            </Router>
-          </React.StrictMode>
-        </Provider>
+        <React.StrictMode>
+          <Router history={this.history}>
+            <React.Fragment>
+              <Route exact path="/" component={DiaryList} />
+              <Switch>
+                <Route exact path="/diary/new" component={NewDiaryForm} />
+                <Route exact path="/diary/:diaryId" component={Diary} />
+                <Route
+                  exact
+                  path="/diary/:diaryId/entry/:entryId"
+                  component={NewEntryForm}
+                />
+              </Switch>
+            </React.Fragment>
+          </Router>
+        </React.StrictMode>
       </div>
     )
   }

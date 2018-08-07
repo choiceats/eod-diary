@@ -2,8 +2,6 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
 
-import * as firebaseui from 'firebaseui'
-
 import { setCurrentUser } from './user'
 
 export function login(callback) {

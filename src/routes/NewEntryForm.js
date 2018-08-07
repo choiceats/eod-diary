@@ -18,22 +18,27 @@ import 'quill/dist/quill.snow.css'
 class NewEntryForm extends Component {
   constructor(props) {
     super(props)
-
-    const { diaryId } = props.match.params
-    const currentUser = getCurrentUser()
-    this.entryRef = firebase
-      .database()
-      .ref(`entries/${currentUser.uid}/${diaryId}`)
     this.editorRef = React.createRef()
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const { match } = this.props
+    const { diaryId, entryId } = match.params
+    const currentUser = getCurrentUser()
+    console.log(match.params)
     this.quillEditor = new Quill(this.editorRef.current, {
       theme: 'snow',
       modules: {
         toolbar: [['bold', 'italic', 'underline', 'strike']]
       }
     })
+
+    const entryRef = firebase
+      .database()
+      .ref(`entries/${currentUser.uid}/${diaryId}`)
+
+    this.entryRef = entryId === 'new' ? entryRef.push() : ''
+
     this.quillEditor.setContents(this.props.entry)
   }
 

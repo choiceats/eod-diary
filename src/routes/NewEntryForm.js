@@ -7,6 +7,11 @@ import Quill from 'quill'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'
+import VerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied'
+import SatisfiedIcon from '@material-ui/icons/SentimentSatisfied'
+import DissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied'
+import NeutralIcon from '@material-ui/icons/SentimentNeutral'
+import VeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied'
 
 import Navbar from '../components/Navbar'
 
@@ -49,7 +54,7 @@ class NewEntryForm extends Component {
       createdBy: 'Nathan',
       created: Date.now(),
       entry: this.quillEditor.getContents(),
-      rawHTML: this.quillEditor.root.innerHTML
+      mood: 'satisfied'
     })
   }
 
@@ -58,6 +63,48 @@ class NewEntryForm extends Component {
     return (
       <div>
         <Navbar title="New Entry" />
+        <Grid
+          container
+          justify={'space-around'}
+          spacing={24}
+          style={{ marginTop: 15 }}
+        >
+          <Grid
+            item
+            xs={2}
+            style={{ display: 'flex', justifyContent: 'center' }}
+          >
+            <VerySatisfiedIcon />
+          </Grid>
+          <Grid
+            item
+            xs={2}
+            style={{ display: 'flex', justifyContent: 'center' }}
+          >
+            <SatisfiedIcon />
+          </Grid>
+          <Grid
+            item
+            xs={2}
+            style={{ display: 'flex', justifyContent: 'center' }}
+          >
+            <NeutralIcon />
+          </Grid>
+          <Grid
+            item
+            xs={2}
+            style={{ display: 'flex', justifyContent: 'center' }}
+          >
+            <DissatisfiedIcon />
+          </Grid>
+          <Grid
+            item
+            xs={2}
+            style={{ display: 'flex', justifyContent: 'center' }}
+          >
+            <VeryDissatisfiedIcon />
+          </Grid>
+        </Grid>
         <Grid container spacing={24}>
           <Grid item xs={12}>
             <div ref={this.editorRef} />

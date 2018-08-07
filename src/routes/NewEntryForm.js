@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { string } from 'prop-types'
 import firebase from 'firebase/app'
 import { Link } from 'react-router-dom'
-import Quill from 'quill'
 
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
@@ -17,34 +16,23 @@ import Navbar from '../components/Navbar'
 
 import { getCurrentUser } from '../services/user'
 
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-
 class NewEntryForm extends Component {
   constructor(props) {
     super(props)
     this.editorRef = React.createRef()
+    this.state = { entry: this.props.entry }
   }
 
   async componentDidMount() {
     const { match } = this.props
     const { diaryId, entryId } = match.params
     const currentUser = getCurrentUser()
-    console.log(match.params)
-    this.quillEditor = new Quill(this.editorRef.current, {
-      theme: 'snow',
-      modules: {
-        toolbar: [['bold', 'italic', 'underline', 'strike']]
-      }
-    })
 
     const entryRef = firebase
       .database()
       .ref(`entries/${currentUser.uid}/${diaryId}`)
 
     this.entryRef = entryId === 'new' ? entryRef.push() : ''
-
-    this.quillEditor.setContents(this.props.entry)
   }
 
   handleEntryChange(event) {
@@ -55,15 +43,21 @@ class NewEntryForm extends Component {
   }
 
   saveNewEntry() {
+    const { entry } = this.state
     this.entryRef.push().set({
       createdBy: 'Nathan',
       created: Date.now(),
-      entry: this.quillEditor.getContents(),
+      entry,
       mood: 'satisfied'
     })
   }
 
+  updateEntry = event => {
+    this.setState({ entry: event.target.value })
+  }
+
   render() {
+    const { entry } = this.state
     const { diaryId } = this.props.match.params
     return (
       <div>
@@ -112,7 +106,7 @@ class NewEntryForm extends Component {
         </Grid>
         <Grid container spacing={24}>
           <Grid item xs={12}>
-            <div ref={this.editorRef} />
+            <textarea onChange={this.updateEntry}>{entry}</textarea>
           </Grid>
         </Grid>
         <Button

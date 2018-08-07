@@ -24,3 +24,19 @@ function handleSignedOutUser(auth) {
     setCurrentUser(result.user)
   })
 }
+
+const config = {
+  apiKey: 'AIzaSyBlDtKtXPEwcCTDvwdGBAEC6xlSBgjMyW8',
+  authDomain: 'eod-diary.firebaseapp.com',
+  databaseURL: 'https://eod-diary.firebaseio.com',
+  projectId: 'eod-diary',
+  storageBucket: 'eod-diary.appspot.com',
+  messagingSenderId: '951019636236'
+}
+firebase.initializeApp(config)
+
+const firebaseDb = firebase.firestore()
+const settings = { timestampsInSnapshots: true }
+firebaseDb.settings(settings)
+
+export default firebaseDb

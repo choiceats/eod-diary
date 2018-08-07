@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { string } from 'prop-types'
-import firebase from 'firebase/app'
 
 import { Link } from 'react-router-dom'
 import Grid from '@material-ui/core/Grid'
@@ -8,6 +7,7 @@ import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'
 import TextField from '@material-ui/core/TextField'
 
+import db from '../services/firebase'
 import { getCurrentUser } from '../services/user'
 
 export class NewDiaryForm extends Component {
@@ -19,11 +19,6 @@ export class NewDiaryForm extends Component {
         description: ''
       }
     }
-  }
-
-  componentDidMount() {
-    const currentUser = getCurrentUser()
-    this.diaryRef = firebase.database().ref(`diaries/${currentUser.uid}`)
   }
 
   handleNameChange(event) {
@@ -47,9 +42,12 @@ export class NewDiaryForm extends Component {
   }
 
   handleSaveDiary() {
-    const newDiaryRef = this.diaryRef.push()
-    newDiaryRef.set({
-      username: 'Nathan',
+    const diaryRef = db.collection('diaries')
+    const currentUser = getCurrentUser()
+
+    debugger
+    diaryRef.add({
+      createdBy: currentUser.uid,
       created: Date.now(),
       name: this.state.diary.name,
       description: this.state.diary.description

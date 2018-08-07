@@ -7,6 +7,7 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 
+import db from '../services/firebase'
 import { getCurrentUser } from '../services/user'
 import StyledList from '../components/StyledList'
 import Navbar from '../components/Navbar'
@@ -44,16 +45,18 @@ export class DiaryList extends React.Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const currentUser = getCurrentUser()
-    this.diaryListRef = firebase.database().ref(`diaries/${currentUser.uid}`)
-    this.diaryListRef.on('value', snap => {
-      this.setState({ diaries: snap.val() })
-    })
-  }
+    this.diariesRef = db.collection('diaries')
+    const myDiaries = await this.diariesRef
+      .where('createdBy', '==', currentUser.uid)
+      .get()
 
-  componentWillUnmount() {
-    this.diaryListRef.off('value')
+    const diaryList = {}
+    myDiaries.forEach(diaryData => (diaryList[diaryData.id] = diaryData.data()))
+
+    console.log({ diaryList })
+    this.setState({ diaries: diaryList })
   }
 
   render() {

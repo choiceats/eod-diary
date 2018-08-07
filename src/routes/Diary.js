@@ -63,10 +63,14 @@ export class Diary extends Component {
       return <div>No entries found</div>
     }
 
+    const { match } = this.props
+    const { diaryId } = match.params
     return (
       <div>
         {Object.keys(entries).map(entryKey => (
-          <EntryCard entryKey={entryKey} entry={entries[entryKey]} />
+          <Link to={`/diary/${diaryId}/entry/${entryKey}`}>
+            <EntryCard entryKey={entryKey} entry={entries[entryKey]} />
+          </Link>
         ))}
       </div>
     )

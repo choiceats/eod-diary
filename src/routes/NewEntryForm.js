@@ -1,17 +1,16 @@
 import React, { Component } from 'react'
 import { string } from 'prop-types'
-import firebase from 'firebase/app'
 import { Link } from 'react-router-dom'
 
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'
-import VerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied'
-import SatisfiedIcon from '@material-ui/icons/SentimentSatisfied'
-import DissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied'
-import NeutralIcon from '@material-ui/icons/SentimentNeutral'
-import VeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied'
 
+import * as MaterialIcons from '@material-ui/icons'
+import Typography from '@material-ui/core/Typography'
+
+import db from '../services/firebase'
+import { getUsersMoods } from '../services/moods'
 import Navbar from '../components/Navbar'
 
 import { getCurrentUser } from '../services/user'
@@ -20,19 +19,19 @@ class NewEntryForm extends Component {
   constructor(props) {
     super(props)
     this.editorRef = React.createRef()
-    this.state = { entry: this.props.entry }
+    this.state = {
+      entry: this.props.entry,
+      mood: '',
+      moods: []
+    }
   }
 
   async componentDidMount() {
     const { match } = this.props
     const { diaryId, entryId } = match.params
     const currentUser = getCurrentUser()
-
-    const entryRef = firebase
-      .database()
-      .ref(`entries/${currentUser.uid}/${diaryId}`)
-
-    this.entryRef = entryId === 'new' ? entryRef.push() : ''
+    const moods = await getUsersMoods(currentUser.id)
+    this.setState({ moods: moods })
   }
 
   handleEntryChange(event) {
@@ -43,12 +42,17 @@ class NewEntryForm extends Component {
   }
 
   saveNewEntry() {
-    const { entry } = this.state
-    this.entryRef.push().set({
-      createdBy: 'Nathan',
+    const { entry, mood } = this.state
+    const entryRef = db.collection('entries')
+    const currentUser = getCurrentUser()
+    const { diaryId } = this.props.match.params
+
+    entryRef.add({
+      diaryId,
+      createdBy: currentUser.uid,
       created: Date.now(),
-      entry,
-      mood: 'satisfied'
+      entry: entry || '',
+      mood: mood || ''
     })
   }
 
@@ -56,56 +60,59 @@ class NewEntryForm extends Component {
     this.setState({ entry: event.target.value })
   }
 
+  updateMood(mood) {
+    this.setState(currState => ({
+      mood: currState.mood === mood.value ? null : mood.value
+    }))
+  }
+
   render() {
-    const { entry } = this.state
+    const { entry, mood, moods } = this.state
     const { diaryId } = this.props.match.params
     return (
       <div>
         <Navbar title="New Entry" />
-        <Grid
-          container
-          justify={'space-around'}
-          spacing={24}
-          style={{ marginTop: 15 }}
-        >
-          <Grid
-            item
-            xs={2}
-            style={{ display: 'flex', justifyContent: 'center' }}
-          >
-            <VerySatisfiedIcon />
+        <Grid container>
+          <Grid item>
+            <Typography variant="headline" gutterBottom>
+              Mood
+            </Typography>
           </Grid>
-          <Grid
-            item
-            xs={2}
-            style={{ display: 'flex', justifyContent: 'center' }}
-          >
-            <SatisfiedIcon />
+        </Grid>
+        <Grid container justify={'space-around'} spacing={24}>
+          {moods.map(userMood => {
+            const Icon = MaterialIcons[userMood.icon]
+            return (
+              <Grid
+                item
+                xs={2}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  color: mood === userMood.value ? 'blue' : 'black'
+                }}
+              >
+                <Icon onClick={() => this.updateMood(userMood)} />
+              </Grid>
+            )
+          })}
+        </Grid>
+        <Grid container>
+          <Grid item>
+            <Typography variant="headline" gutterBottom>
+              Activities
+            </Typography>
           </Grid>
-          <Grid
-            item
-            xs={2}
-            style={{ display: 'flex', justifyContent: 'center' }}
-          >
-            <NeutralIcon />
-          </Grid>
-          <Grid
-            item
-            xs={2}
-            style={{ display: 'flex', justifyContent: 'center' }}
-          >
-            <DissatisfiedIcon />
-          </Grid>
-          <Grid
-            item
-            xs={2}
-            style={{ display: 'flex', justifyContent: 'center' }}
-          >
-            <VeryDissatisfiedIcon />
+        </Grid>
+        <Grid container>
+          <Grid item>
+            <Typography variant="headline" gutterBottom>
+              Notes
+            </Typography>
           </Grid>
         </Grid>
         <Grid container spacing={24}>
-          <Grid item xs={12}>
+          <Grid item xs={12} md={12}>
             <textarea onChange={this.updateEntry}>{entry}</textarea>
           </Grid>
         </Grid>

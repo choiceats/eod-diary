@@ -45,7 +45,6 @@ export class NewDiaryForm extends Component {
     const diaryRef = db.collection('diaries')
     const currentUser = getCurrentUser()
 
-    debugger
     diaryRef.add({
       createdBy: currentUser.uid,
       created: Date.now(),

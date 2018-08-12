@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { arrayOf, string } from 'prop-types'
-import firebase from 'firebase/app'
+import { string } from 'prop-types'
 import { Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'
 
+import db from '../services/firebase'
 import { getCurrentUser } from '../services/user'
 import EntryCard from '../components/EntryCard'
 import Navbar from '../components/Navbar'
@@ -15,24 +15,21 @@ export class Diary extends Component {
     this.state = { diary: null, entries: [] }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { match } = this.props
     const diaryId = match.params.diaryId
     const currentUser = getCurrentUser()
-    const fbDb = firebase.database()
-    this.diaryRef = fbDb.ref(`diaries/${currentUser.uid}/${diaryId}`)
-    this.diaryRef.on('value', snap => {
-      this.setState({ diary: snap.val() })
-    })
 
-    this.entriesRef = fbDb.ref(`entries/${currentUser.uid}/${diaryId}`)
-    this.entriesRef.on('value', snap => {
-      this.setState({ entries: snap.val() })
-    })
-  }
+    this.entriesCollection = db.collection('entries')
+    const entries = await this.entriesCollection
+      .where('createdBy', '==', currentUser.uid)
+      .where('diaryId', '==', diaryId)
+      .get()
 
-  componentWillUnmount() {
-    this.diaryRef.off('value')
+    const normalizedEntries = {}
+    entries.forEach(entry => (normalizedEntries[entry.id] = entry.data()))
+
+    this.setState({ entries: normalizedEntries })
   }
 
   render() {
@@ -78,7 +75,6 @@ export class Diary extends Component {
 }
 
 Diary.propTypes = {
-  entries: arrayOf(string),
   name: string
 }
 

@@ -8,6 +8,7 @@ import db from '../services/firebase'
 import { getCurrentUser } from '../services/user'
 import EntryCard from '../components/EntryCard'
 import Navbar from '../components/Navbar'
+import Calendar from '../components/Calendar'
 
 export class Diary extends Component {
   constructor(props) {
@@ -51,6 +52,7 @@ export class Diary extends Component {
         >
           <AddIcon />
         </Button>
+        <Calendar />
       </React.Fragment>
     )
   }

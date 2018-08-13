@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 
-import './calendar.css'
+import './Calendar.css'
 
 class Calendar extends Component {
   constructor(props) {
@@ -16,6 +16,22 @@ class Calendar extends Component {
 
     let weekDays = []
     weekDays = weekDays.fill(monthWeekDayStart - 1)
+
+    let currentDate = firstDayOfMonth.clone()
+    while (currentDate.month() === m.month()) {
+      weekDays.push(currentDate.clone())
+      currentDate.add(1, 'day')
+    }
+
+    return (
+      <div className="calendar-container">
+        {weekDays.map(day => {
+          return (
+            <div className="calendar-container__days">{day && day.date()}</div>
+          )
+        })}
+      </div>
+    )
   }
 }
 
